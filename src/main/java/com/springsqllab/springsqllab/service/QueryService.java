@@ -21,9 +21,7 @@ public class QueryService {
 
     public String executeQuery(String problemId, String query) {
         // SQL 검증
-        if (!isSelectQuery(query)) {
-            throw new IllegalArgumentException("Only SELECT queries are allowed.");
-        }
+        isSelectQuery(query);
 
         String dbUrl = url + problemId; // 문제 ID를 URL 에 추가하는 방식
 
@@ -60,12 +58,11 @@ public class QueryService {
         return result.toString();
     }
 
-    private boolean isSelectQuery(String query) {
+    private void isSelectQuery(String query) {
         try {
             Select select = (Select) CCJSqlParserUtil.parse(query);
-            return true;
         } catch (Exception e) {
-            return false;
+            throw new IllegalArgumentException("Only SELECT queries are allowed.");
         }
     }
 
